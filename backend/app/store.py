@@ -8,6 +8,9 @@ from typing import Any
 
 from app.seed import SEED_ROWS
 
+# 仅供业务服务内部使用的派生表，不进入运营概览的业务模块统计
+INTERNAL_MODULES = {"export_batch", "export_manifest"}
+
 
 class Store:
     def __init__(self) -> None:
@@ -30,6 +33,8 @@ class Store:
     def overview(self) -> dict[str, object]:
         modules: list[dict[str, object]] = []
         for name in self.module_names():
+            if name in INTERNAL_MODULES:
+                continue
             rows = self.rows(name)
             modules.append({
                 "name": name,

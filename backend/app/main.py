@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import ROUTERS
+from app.services.export import ensure_demo_batches
 from app.store import store
 
 app = FastAPI(title="数据分析实验与数据应用服务平台", version="1.0.0")
@@ -24,6 +25,9 @@ app.add_middleware(
 
 for module in ROUTERS:
     app.include_router(module.router)
+
+# 初始化一个示例导出批次，使导出版本清单、行数指纹与源快照标识开箱可见
+ensure_demo_batches()
 
 
 @app.get("/api/health")
